@@ -1,6 +1,6 @@
 package io.github.abhishekchd.rediseventdelivery.publisher;
 
-import model.Event;
+import io.github.abhishekchd.rediseventdelivery.model.Event;
 
 public interface EventPublisher {
 

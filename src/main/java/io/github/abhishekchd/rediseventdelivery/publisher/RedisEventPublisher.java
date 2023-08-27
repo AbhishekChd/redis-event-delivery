@@ -1,7 +1,7 @@
 package io.github.abhishekchd.rediseventdelivery.publisher;
 
+import io.github.abhishekchd.rediseventdelivery.model.Event;
 import lombok.extern.log4j.Log4j2;
-import model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

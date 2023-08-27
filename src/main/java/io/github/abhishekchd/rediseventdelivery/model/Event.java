@@ -1,4 +1,4 @@
-package model;
+package io.github.abhishekchd.rediseventdelivery.model;
 
 import lombok.Data;
 

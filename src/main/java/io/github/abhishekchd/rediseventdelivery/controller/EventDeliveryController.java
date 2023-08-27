@@ -1,7 +1,7 @@
 package io.github.abhishekchd.rediseventdelivery.controller;
 
+import io.github.abhishekchd.rediseventdelivery.model.Event;
 import io.github.abhishekchd.rediseventdelivery.publisher.EventPublisher;
-import model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

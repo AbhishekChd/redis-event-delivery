@@ -1,8 +1,8 @@
 package io.github.abhishekchd.rediseventdelivery.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.abhishekchd.rediseventdelivery.model.Event;
 import lombok.extern.log4j.Log4j2;
-import model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;

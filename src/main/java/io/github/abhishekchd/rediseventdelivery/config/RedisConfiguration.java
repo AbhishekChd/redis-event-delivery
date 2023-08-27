@@ -1,7 +1,7 @@
 package io.github.abhishekchd.rediseventdelivery.config;
 
+import io.github.abhishekchd.rediseventdelivery.model.Event;
 import io.github.abhishekchd.rediseventdelivery.subscriber.EventSubscriber;
-import model.Event;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
