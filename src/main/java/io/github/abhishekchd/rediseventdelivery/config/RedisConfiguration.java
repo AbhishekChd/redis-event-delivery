@@ -1,13 +1,15 @@
 package io.github.abhishekchd.rediseventdelivery.config;
 
 import io.github.abhishekchd.rediseventdelivery.subscriber.EventSubscriber;
+import model.Event;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.util.concurrent.Executors;
 
@@ -23,8 +25,11 @@ public class RedisConfiguration {
     }
 
     @Bean
-    StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
-        return new StringRedisTemplate(connectionFactory);
+    RedisTemplate<String, Event> genericTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Event> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Event.class));
+        return redisTemplate;
     }
 
     @Bean

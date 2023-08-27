@@ -1,6 +1,7 @@
 package io.github.abhishekchd.rediseventdelivery.controller;
 
 import io.github.abhishekchd.rediseventdelivery.publisher.EventPublisher;
+import model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,8 @@ public class EventDeliveryController {
     private EventPublisher eventPublisher;
 
     @PostMapping("/publish-event")
-    public ResponseEntity<String> publishEventToRedis(@RequestBody String message) {
-        eventPublisher.publishMessage(message);
-        return ResponseEntity.ok("Received event: " + message);
+    public ResponseEntity<String> publishEventToRedis(@RequestBody Event event) {
+        eventPublisher.publishMessage(event);
+        return ResponseEntity.ok("Received event: " + event);
     }
 }

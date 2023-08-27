@@ -1,11 +1,13 @@
 package io.github.abhishekchd.rediseventdelivery.publisher;
 
+import model.Event;
+
 public interface EventPublisher {
 
     /**
      * Publish event to Redis based messaging queue
      *
-     * @param data Message/Event to be sent to queue
+     * @param event Message/Event to be sent to queue
      */
-    void publishMessage(String data);
+    void publishMessage(Event event);
 }
