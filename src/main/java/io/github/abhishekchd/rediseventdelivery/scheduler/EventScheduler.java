@@ -74,7 +74,10 @@ public class EventScheduler {
         return sInstance;
     }
 
-    public void scheduleEvent(EventEntity eventEntity) {
+    public void scheduleEvent() {
+        EventEntity eventEntity = eventRepository.findFirst1ByOrderByEventCreatedAtAsc();
+        log.info("Loaded event {} from database", eventEntity.getSequenceId());
+
         long delay = exponentialBackoffDelay(eventEntity.getTryCount());
         scheduler.schedule(() -> executePublishEvent(eventEntity), delay, TimeUnit.MILLISECONDS);
         log.info("Scheduled event {} with delay of {}", eventEntity.getSequenceId(), delay);

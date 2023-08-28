@@ -13,6 +13,6 @@ public class EventEntityListener {
     @Async
     public void databaseUpdateCallback(EventEntity eventEntity) {
         EventScheduler eventScheduler = EventScheduler.getInstance();
-        eventScheduler.scheduleEvent(eventEntity);
+        eventScheduler.scheduleEvent();
     }
 }
