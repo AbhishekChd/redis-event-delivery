@@ -7,21 +7,21 @@ A pub-sub system to fan-out multiple requests/events to multiple destinations ba
 4. Maintaining order
 5. Delivery Isolation
 
-### Durability
+### 1. Durability
 Once API receives the event, it persists the data before performing any other actions making the event data secure and durable.
 
-### At-least-once delivery
+### 2. At-least-once delivery
 Whenever failure occurs, the system will push to publish it again until it gets at least one successful publish.
 
-### Retry backoff and limit
+### 3. Retry backoff and limit
 We have flexible `MAX_RETRY` limit to stop error prone events to block queue.
 
 We further have an **Exponential backoff** algorithm implemented for retries so would not overload the Client API.
 
-### Maintaining order
+### 4. Maintaining order
 The events always maintain a FIFO ordering based on `event recieved` time and will always follow the same even in case of failures.
 
-### Delivery Isolation
+### 5. Delivery Isolation
 Current implementation does not support isolation, but is open to extension. Isolation can be achieved by separating channels tp publish, and also the database table based on `destination`. This will make queues isolated and much faster in execution.
 
 ---
