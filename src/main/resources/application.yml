@@ -8,3 +8,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+event_scheduler:
+  retry:
+    count: 4
+  wait_duration: 500
