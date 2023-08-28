@@ -12,17 +12,23 @@ import org.springframework.lang.NonNull;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class EventScheduler {
     private static final Random RANDOM = new Random();
+    protected static ScheduledFuture<?> watcherScheduledFuture;
+    protected static ScheduledFuture<?> retryScheduledFuture;
     private static volatile EventScheduler sInstance = null;
     private final int MAX_RETRY_COUNT;
     private final int WAIT_DURATION;
+    private final int WATCHER_DELAY;
+    private final int WATCHER_PERIOD;
     private final EventPublisher eventPublisher;
     private final EventRepository eventRepository;
-    private final ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService publishScheduler;
+    private final ScheduledExecutorService watcherScheduler;
     private final EventStateLifecycle<EventEntity> lifecycle = new EventStateLifecycle<>() {
         @Override
         public void onSuccess(@NonNull EventEntity entity) {
@@ -52,7 +58,8 @@ public class EventScheduler {
         int DEFAULT_WAIT_DURATION = 500; // 500ms
         this.eventPublisher = BeanProvider.getBean(EventPublisher.class);
         this.eventRepository = BeanProvider.getBean(EventRepository.class);
-        this.scheduler = BeanProvider.getBean(ScheduledExecutorService.class);
+        this.publishScheduler = BeanProvider.getBean(ScheduledExecutorService.class);
+        this.watcherScheduler = BeanProvider.getBean(ScheduledExecutorService.class);
 
         AppConfig appConfig = BeanProvider.getBean(AppConfig.class);
 
@@ -61,6 +68,12 @@ public class EventScheduler {
 
         Integer waitDurationValue = appConfig.getEventSchedulerWaitDuration();
         WAIT_DURATION = Objects.isNull(waitDurationValue) ? DEFAULT_WAIT_DURATION : waitDurationValue;
+
+        Integer watcherDelayValue = appConfig.getEventSchedulerWatcherDelay();
+        WATCHER_DELAY = Objects.isNull(watcherDelayValue) ? 500 : watcherDelayValue;
+
+        Integer watcherPeriodValue = appConfig.getEventSchedulerWatcherPeriod();
+        WATCHER_PERIOD = Objects.isNull(watcherPeriodValue) ? 1000 : watcherPeriodValue;
     }
 
     public static EventScheduler getInstance() {
@@ -74,12 +87,25 @@ public class EventScheduler {
         return sInstance;
     }
 
+    public static void initEventWatcher() {
+        if (Objects.nonNull(watcherScheduledFuture) && !watcherScheduledFuture.isDone()) {
+            return;
+        }
+        watcherScheduledFuture = EventScheduler.getInstance().watcherScheduler.scheduleAtFixedRate(() -> {
+            if (Objects.nonNull(retryScheduledFuture) && !retryScheduledFuture.isDone()) {
+                return;
+            }
+            log.info("Event Watcher Running");
+            sInstance.scheduleEvent();
+        }, sInstance.WATCHER_DELAY, sInstance.WATCHER_PERIOD, TimeUnit.MILLISECONDS);
+    }
+
     public void scheduleEvent() {
         EventEntity eventEntity = eventRepository.findFirst1ByOrderByEventCreatedAtAsc();
         log.info("Loaded event {} from database", eventEntity.getSequenceId());
 
         long delay = exponentialBackoffDelay(eventEntity.getTryCount());
-        scheduler.schedule(() -> executePublishEvent(eventEntity), delay, TimeUnit.MILLISECONDS);
+        retryScheduledFuture = publishScheduler.schedule(() -> executePublishEvent(eventEntity), delay, TimeUnit.MILLISECONDS);
         log.info("Scheduled event {} with delay of {}", eventEntity.getSequenceId(), delay);
     }
 

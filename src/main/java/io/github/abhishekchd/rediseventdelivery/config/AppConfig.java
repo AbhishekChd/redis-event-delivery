@@ -18,8 +18,14 @@ public class AppConfig {
     @Value("${event_scheduler.retry.count}")
     private Integer eventSchedulerRetryCount;
 
-    @Value("${event_scheduler.wait_duration}")
+    @Value("${event_scheduler.retry.wait_duration}")
     private Integer eventSchedulerWaitDuration;
+
+    @Value("${event_scheduler.watcher.delay}")
+    private Integer eventSchedulerWatcherDelay;
+
+    @Value("${event_scheduler.watcher.period}")
+    private Integer eventSchedulerWatcherPeriod;
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {

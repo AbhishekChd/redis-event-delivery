@@ -12,7 +12,7 @@ public class EventEntityListener {
     @PostUpdate
     @Async
     public void databaseUpdateCallback(EventEntity eventEntity) {
-        EventScheduler eventScheduler = EventScheduler.getInstance();
-        eventScheduler.scheduleEvent();
+        EventScheduler.initEventWatcher();
+
     }
 }
