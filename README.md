@@ -26,16 +26,31 @@ Current implementation does not support isolation, but is open to extension. Iso
 
 ---
 
-## Installation
+## Run Application
 
-> **[PENDING]** Deployment using Docker
+```shell
+# We can change modify image in docker-compose.yml for live image form GitHub
+# Or build local project Docker image like below 
+docker build . --tag abhishekchd/redis-event-delivery
 
-### Requirements
+# Deploy the container to Docker
+ docker compose -f ./docker-compose.yml -p redis-event-delivery up -d
+ 
+# Call API to verify app is up and running
+curl --location --request POST 'http://localhost:8080/publish-event' \
+--header 'Content-Type: application/json' \
+--data '{
+    "userId": "user-id-1",
+    "payload": "Event payload"
+}'
+
+# Output on live server
+$ Received event: Event(userId=user-id-1, payload=Event payload)
+```
+
+### Requirements for local development
 1. PostgresSQL 15
 2. Redis server
-
-After installation of these tools, we start redis using `redis-server` and we are ready to go.
-Then we can run our application through CLI.
 
 ---
 

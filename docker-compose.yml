@@ -3,6 +3,8 @@ version: '3.8'
 services:
   app:
     container_name: app
+#   For latest deployed image on GitHub uncomment this, and comment existing one
+#    image: 'ghcr.io/abhishekchd/redis-event-delivery:main'
     image: 'abhishekchd/redis-event-delivery:latest'
     ports:
       - "8080:8080"
