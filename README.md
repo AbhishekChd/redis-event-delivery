@@ -1,5 +1,13 @@
 # Redis Event Delivery
 
+<p>
+<img src="https://img.shields.io/github/license/AbhishekChd/redis-event-delivery"
+<a src="https://github.com/AbhishekChd/redis-event-delivery/pkgs/container/redis-event-delivery/122973868?tag=main">
+   <img src="https://ghcr-badge.egpl.dev/abhishekchd/redis-event-delivery/tags?ignore=sha256*&label=image%20tag">
+</a>
+<img src="https://ghcr-badge.egpl.dev/abhishekchd/redis-event-delivery/size?tag=main">
+</p>
+
 A pub-sub system to fan-out multiple requests/events to multiple destinations based on following features:
 1. Durability
 2. At-least-once delivery
