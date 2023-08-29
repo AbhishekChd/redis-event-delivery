@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    image: 'abhishekchd/redis-event-delivery:latest'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    links:
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/redis_events
+      - SPRING_DATASOURCE_USERNAME=abhishek
+      - SPRING_DATASOURCE_PASSWORD=abhishek
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+  redis:
+    image: 'redis:alpine'
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+  db:
+    image: 'postgres:alpine'
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=redis_events
+      - POSTGRES_USER=abhishek
+      - POSTGRES_PASSWORD=abhishek
+#    Uncomment below to access database in pgAdmin
+#    expose:
+#      - "5432:5432"
